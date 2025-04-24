@@ -34,7 +34,7 @@
       </center>
       <div class="login-box-body">
         <center>
-          <img src="gambar/sistem/contoh.png" style="width: 150px;height: auto">
+          <img src="gambar/sistem/logo.png" style="width: 150px;height: auto">
         </center>
         <p class="login-box-msg text-bold"></p>
         <form action="periksa_login.php" method="POST">
@@ -50,6 +50,9 @@
             <div class="col-xs-offset-8 col-xs-4">
               <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
             </div>
+
+            <footer style="text-align: center; margin-top: 50px;">XI.8 ACCELEREIGHT | Kelompok 4</footer>
+            <footer style="text-align: center;">umkm.chillzone.my.id</footer>
           </div>
         </form>
       </div>

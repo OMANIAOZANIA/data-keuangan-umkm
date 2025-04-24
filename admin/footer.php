@@ -3,7 +3,7 @@
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0
     </div>
-    <strong>Copyright CV.Atasee &copy; 2023</strong> - Sistem Informasi Laporan Keuangan CV.ATASEE
+    <strong>Copyright Kelompok 4 &copy; 2024-2025</strong> - Laporan Keuangan UMKM
   </footer>
 
   
