@@ -1,6 +1,17 @@
 <?php 
-include '../koneksi.php';
-$id  = $_GET['id'];
+include '../config/db.php';
 
-mysqli_query($koneksi, "delete from hutang where hutang_id='$id'");
-header("location:hutang.php");
+$id = $_GET['id'];
+
+$query = "DELETE FROM hutang WHERE hutang_id = ?";
+$stmt = mysqli_prepare($koneksi, $query);
+
+if ($stmt) {
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+}
+
+header("Location: hutang.php");
+exit;
+?>

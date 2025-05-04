@@ -1,30 +1,41 @@
 <?php 
-include '../koneksi.php';
-$tanggal  = $_POST['tanggal'];
-$jenis  = $_POST['jenis'];
-$kategori  = $_POST['kategori'];
-$nominal  = $_POST['nominal'];
-$keterangan  = $_POST['keterangan'];
-$bank  = $_POST['bank'];
+include '../config/db.php';
 
+// validasi data POST
+$tanggal    = $_POST['tanggal'];
+$jenis      = $_POST['jenis'];
+$kategori   = intval($_POST['kategori']);
+$nominal    = floatval($_POST['nominal']);
+$keterangan = $_POST['keterangan'];
+$bank       = intval($_POST['bank']);
 
-$rekening = mysqli_query($koneksi,"select * from bank where bank_id='$bank'");
-$r = mysqli_fetch_assoc($rekening);
+// get saldo bank saat ini
+$stmt = $koneksi->prepare("SELECT bank_saldo FROM bank WHERE bank_id = ?");
+$stmt->bind_param("i", $bank);
+$stmt->execute();
+$result = $stmt->get_result();
+$r = $result->fetch_assoc();
+$stmt->close();
 
-if($jenis == "Pemasukan"){
-
-	$saldo_sekarang = $r['bank_saldo'];
-	$total = $saldo_sekarang+$nominal;
-	mysqli_query($koneksi,"update bank set bank_saldo='$total' where bank_id='$bank'");
-
-}elseif($jenis == "Pengeluaran"){
-
-	$saldo_sekarang = $r['bank_saldo'];
-	$total = $saldo_sekarang-$nominal;
-	mysqli_query($koneksi,"update bank set bank_saldo='$total' where bank_id='$bank'");
-
+$saldo_sekarang = $r['bank_saldo'];
+if ($jenis == "Pemasukan") {
+    $total = $saldo_sekarang + $nominal;
+} else {
+    $total = $saldo_sekarang - $nominal;
 }
 
+// update saldo bank
+$stmt = $koneksi->prepare("UPDATE bank SET bank_saldo = ? WHERE bank_id = ?");
+$stmt->bind_param("di", $total, $bank);
+$stmt->execute();
+$stmt->close();
 
-mysqli_query($koneksi, "insert into transaksi values (NULL,'$tanggal','$jenis','$kategori','$nominal','$keterangan','$bank')")or die(mysqli_error($koneksi));
-header("location:transaksi.php");
+// insert transaksi baru
+$stmt = $koneksi->prepare("INSERT INTO transaksi (transaksi_tanggal, transaksi_jenis, transaksi_kategori, transaksi_nominal, transaksi_keterangan, transaksi_bank) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssidsi", $tanggal, $jenis, $kategori, $nominal, $keterangan, $bank);
+$stmt->execute();
+$stmt->close();
+
+header("Location: transaksi.php");
+exit();
+?>

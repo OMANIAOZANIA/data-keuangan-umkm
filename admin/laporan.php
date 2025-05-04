@@ -1,221 +1,190 @@
-<?php include 'header.php'; ?>
+<?php
+include 'header.php';
+include '../config/db.php';
+?>
 
 <div class="content-wrapper">
-
-  <section class="content-header">
-    <h1>
-      LAPORAN
-      <small>Data Laporan</small>
-    </h1>
+<section class="content-header">
+    <h1>LAPORAN <small>Data Laporan</small></h1>
     <ol class="breadcrumb">
-      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-      <li class="active">Dashboard</li>
+    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active">Dashboard</li>
     </ol>
-  </section>
+</section>
 
-  <section class="content">
+<section class="content">
     <div class="row">
-      <section class="col-lg-12">
+    <section class="col-lg-12">
         <div class="box box-info">
-          <div class="box-header">
+
+        <!-- Filter -->
+        <div class="box-header">
             <h3 class="box-title">Filter Laporan</h3>
-          </div>
-          <div class="box-body">
+        </div>
+        <div class="box-body">
             <form method="get" action="">
-              <div class="row">
+            <div class="row">
                 <div class="col-md-3">
-
-                  <div class="form-group">
+                <div class="form-group">
                     <label>Mulai Tanggal</label>
-                    <input autocomplete="off" type="text" value="<?php if(isset($_GET['tanggal_dari'])){echo $_GET['tanggal_dari'];}else{echo "";} ?>" name="tanggal_dari" class="form-control datepicker2" placeholder="Mulai Tanggal" required="required">
-                  </div>
-
+                    <input autocomplete="off" type="text" value="<?= isset($_GET['tanggal_dari']) ? $_GET['tanggal_dari'] : '' ?>" name="tanggal_dari" class="form-control datepicker2" placeholder="Mulai Tanggal" required>
+                </div>
                 </div>
 
                 <div class="col-md-3">
-
-                  <div class="form-group">
+                <div class="form-group">
                     <label>Sampai Tanggal</label>
-                    <input autocomplete="off" type="text" value="<?php if(isset($_GET['tanggal_sampai'])){echo $_GET['tanggal_sampai'];}else{echo "";} ?>" name="tanggal_sampai" class="form-control datepicker2" placeholder="Sampai Tanggal" required="required">
-                  </div>
-
+                    <input autocomplete="off" type="text" value="<?= isset($_GET['tanggal_sampai']) ? $_GET['tanggal_sampai'] : '' ?>" name="tanggal_sampai" class="form-control datepicker2" placeholder="Sampai Tanggal" required>
+                </div>
                 </div>
 
                 <div class="col-md-3">
-
-                  <div class="form-group">
+                <div class="form-group">
                     <label>Kategori</label>
-                    <select name="kategori" class="form-control" required="required">
-                      <option value="semua">- Semua Kategori -</option>
-                      <?php 
-                      $kategori = mysqli_query($koneksi,"SELECT * FROM kategori");
-                      while($k = mysqli_fetch_array($kategori)){
-                        ?>
-                        <option <?php if(isset($_GET['kategori'])){ if($_GET['kategori'] == $k['kategori_id']){echo "selected='selected'";}} ?>  value="<?php echo $k['kategori_id']; ?>"><?php echo $k['kategori']; ?></option>
-                        <?php 
-                      }
-                      ?>
+                    <select name="kategori" class="form-control" required>
+                    <option value="semua">- Semua Kategori -</option>
+                    <?php 
+                    $kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
+                    while($k = mysqli_fetch_array($kategori)){
+                        $selected = (isset($_GET['kategori']) && $_GET['kategori'] == $k['kategori_id']) ? "selected" : "";
+                        echo "<option value='{$k['kategori_id']}' $selected>{$k['kategori']}</option>";
+                    }
+                    ?>
                     </select>
-                  </div>
-
+                </div>
                 </div>
 
                 <div class="col-md-3">
-
-                  <div class="form-group">
+                <div class="form-group">
                     <br/>
                     <input type="submit" value="TAMPILKAN" class="btn btn-sm btn-primary btn-block">
-                  </div>
-
                 </div>
-              </div>
+                </div>
+            </div>
             </form>
-          </div>
+        </div>
         </div>
 
+        <!-- Laporan -->
         <div class="box box-info">
-          <div class="box-header">
-            <h3 class="box-title">Laporan Pemasukan & Pegeluaran</h3>
-          </div>
-          <div class="box-body">
+        <div class="box-header">
+            <h3 class="box-title">Laporan Pemasukan & Pengeluaran</h3>
+        </div>
+        <div class="box-body">
 
             <?php 
-            if(isset($_GET['tanggal_sampai']) && isset($_GET['tanggal_dari']) && isset($_GET['kategori'])){
-              $tgl_dari = $_GET['tanggal_dari'];
-              $tgl_sampai = $_GET['tanggal_sampai'];
-              $kategori = $_GET['kategori'];
-              ?>
+            if(isset($_GET['tanggal_sampai'], $_GET['tanggal_dari'], $_GET['kategori'])){
+            $tgl_dari = $_GET['tanggal_dari'];
+            $tgl_sampai = $_GET['tanggal_sampai'];
+            $kategori = $_GET['kategori'];
+            ?>
 
-              <div class="row">
+            <div class="row">
                 <div class="col-lg-6">
-                  <table class="table table-bordered">
+                <table class="table table-bordered">
                     <tr>
-                      <th width="30%">DARI TANGGAL</th>
-                      <th width="1%">:</th>
-                      <td><?php echo $tgl_dari; ?></td>
+                    <th width="30%">DARI TANGGAL</th><th width="1%">:</th><td><?= $tgl_dari; ?></td>
                     </tr>
                     <tr>
-                      <th>SAMPAI TANGGAL</th>
-                      <th>:</th>
-                      <td><?php echo $tgl_sampai; ?></td>
+                    <th>SAMPAI TANGGAL</th><th>:</th><td><?= $tgl_sampai; ?></td>
                     </tr>
                     <tr>
-                      <th>KATEGORI</th>
-                      <th>:</th>
-                      <td>
+                    <th>KATEGORI</th><th>:</th>
+                    <td>
                         <?php 
                         if($kategori == "semua"){
-                          echo "SEMUA KATEGORI";
-                        }else{
-                          $k = mysqli_query($koneksi,"select * from kategori where kategori_id='$kategori'");
-                          $kk = mysqli_fetch_assoc($k);
-                          echo $kk['kategori'];
+                        echo "SEMUA KATEGORI";
+                        } else {
+                        $stmt = $koneksi->prepare("SELECT * FROM kategori WHERE kategori_id = ?");
+                        $stmt->bind_param("i", $kategori);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        $kk = $result->fetch_assoc();
+                        echo $kk['kategori'] ?? 'Tidak diketahui';
                         }
                         ?>
-
-                      </td>
+                    </td>
                     </tr>
-                  </table>
-                  
+                </table>
                 </div>
-              </div>
+            </div>
 
-              <a href="laporan_pdf.php?tanggal_dari=<?php echo $tgl_dari ?>&tanggal_sampai=<?php echo $tgl_sampai ?>&kategori=<?php echo $kategori ?>" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-file-pdf-o"></i> &nbsp CETAK PDF</a>
-              <a href="laporan_print.php?tanggal_dari=<?php echo $tgl_dari ?>&tanggal_sampai=<?php echo $tgl_sampai ?>&kategori=<?php echo $kategori ?>" target="_blank" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> &nbsp PRINT</a>
-              <div class="table-responsive">
+            <a href="laporan_pdf.php?tanggal_dari=<?= $tgl_dari ?>&tanggal_sampai=<?= $tgl_sampai ?>&kategori=<?= $kategori ?>" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-file-pdf-o"></i> &nbsp CETAK PDF</a>
+            <a href="laporan_print.php?tanggal_dari=<?= $tgl_dari ?>&tanggal_sampai=<?= $tgl_sampai ?>&kategori=<?= $kategori ?>" target="_blank" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> &nbsp PRINT</a>
+
+            <div class="table-responsive">
                 <table class="table table-bordered table-striped">
-                  <thead>
+                <thead>
                     <tr>
-                      <th width="1%" rowspan="2">NO</th>
-                      <th width="10%" rowspan="2" class="text-center">TANGGAL</th>
-                      <th rowspan="2" class="text-center">KATEGORI</th>
-                      <th rowspan="2" class="text-center">KETERANGAN</th>
-                      <th colspan="2" class="text-center">JENIS</th>
+                    <th rowspan="2" class="text-center">NO</th>
+                    <th rowspan="2" class="text-center">TANGGAL</th>
+                    <th rowspan="2" class="text-center">KATEGORI</th>
+                    <th rowspan="2" class="text-center">KETERANGAN</th>
+                    <th colspan="2" class="text-center">JENIS</th>
                     </tr>
                     <tr>
-                      <th class="text-center">PEMASUKAN</th>
-                      <th class="text-center">PENGELUARAN</th>
+                    <th class="text-center">PEMASUKAN</th>
+                    <th class="text-center">PENGELUARAN</th>
                     </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
                     <?php 
-                    include '../koneksi.php';
-                    $no=1;
-                    $total_pemasukan=0;
-                    $total_pengeluaran=0;
-                    if($kategori == "semua"){
-                      $data = mysqli_query($koneksi,"SELECT * FROM transaksi,kategori where kategori_id=transaksi_kategori and date(transaksi_tanggal)>='$tgl_dari' and date(transaksi_tanggal)<='$tgl_sampai'");
-                    }else{
-                      $data = mysqli_query($koneksi,"SELECT * FROM transaksi,kategori where kategori_id=transaksi_kategori and kategori_id='$kategori' and date(transaksi_tanggal)>='$tgl_dari' and date(transaksi_tanggal)<='$tgl_sampai'");
-                    }
-                    while($d = mysqli_fetch_array($data)){
+                    $no = 1;
+                    $total_pemasukan = 0;
+                    $total_pengeluaran = 0;
 
-                      if($d['transaksi_jenis'] == "Pemasukan"){
+                    if($kategori == "semua"){
+                    $stmt = $koneksi->prepare("SELECT * FROM transaksi JOIN kategori ON kategori_id = transaksi_kategori WHERE date(transaksi_tanggal) >= ? AND date(transaksi_tanggal) <= ?");
+                    $stmt->bind_param("ss", $tgl_dari, $tgl_sampai);
+                    } else {
+                    $stmt = $koneksi->prepare("SELECT * FROM transaksi JOIN kategori ON kategori_id = transaksi_kategori WHERE kategori_id = ? AND date(transaksi_tanggal) >= ? AND date(transaksi_tanggal) <= ?");
+                    $stmt->bind_param("iss", $kategori, $tgl_dari, $tgl_sampai);
+                    }
+
+                    $stmt->execute();
+                    $data = $stmt->get_result();
+
+                    while($d = $data->fetch_assoc()){
+                    $nominal = number_format($d['transaksi_nominal']);
+                    if($d['transaksi_jenis'] == "Pemasukan"){
                         $total_pemasukan += $d['transaksi_nominal'];
-                      }elseif($d['transaksi_jenis'] == "Pengeluaran"){
+                    } elseif($d['transaksi_jenis'] == "Pengeluaran"){
                         $total_pengeluaran += $d['transaksi_nominal'];
-                      }
-                      ?>
-                      <tr>
-                        <td class="text-center"><?php echo $no++; ?></td>
-                        <td class="text-center"><?php echo date('d-m-Y', strtotime($d['transaksi_tanggal'])); ?></td>
-                        <td><?php echo $d['kategori']; ?></td>
-                        <td><?php echo $d['transaksi_keterangan']; ?></td>
-                        <td class="text-center">
-                          <?php 
-                          if($d['transaksi_jenis'] == "Pemasukan"){
-                            echo "Rp. ".number_format($d['transaksi_nominal'])." ,-";
-                          }else{
-                            echo "-";
-                          }
-                          ?>
-                        </td>
-                        <td class="text-center">
-                          <?php 
-                          if($d['transaksi_jenis'] == "Pengeluaran"){
-                            echo "Rp. ".number_format($d['transaksi_nominal'])." ,-";
-                          }else{
-                            echo "-";
-                          }
-                          ?>
-                        </td>
-                      </tr>
-                      <?php 
                     }
                     ?>
                     <tr>
-                      <th colspan="4" class="text-right">TOTAL</th>
-                      <td class="text-center text-bold text-success"><?php echo "Rp. ".number_format($total_pemasukan)." ,-"; ?></td>
-                      <td class="text-center text-bold text-danger"><?php echo "Rp. ".number_format($total_pengeluaran)." ,-"; ?></td>
+                        <td class="text-center"><?= $no++; ?></td>
+                        <td class="text-center"><?= date('d-m-Y', strtotime($d['transaksi_tanggal'])); ?></td>
+                        <td><?= $d['kategori']; ?></td>
+                        <td><?= $d['transaksi_keterangan']; ?></td>
+                        <td class="text-center"><?= $d['transaksi_jenis'] == "Pemasukan" ? "Rp. $nominal ,-": "-" ?></td>
+                        <td class="text-center"><?= $d['transaksi_jenis'] == "Pengeluaran" ? "Rp. $nominal ,-": "-" ?></td>
+                    </tr>
+                    <?php } ?>
+                    <tr>
+                    <th colspan="4" class="text-right">TOTAL</th>
+                    <td class="text-center text-bold text-success"><?= "Rp. " . number_format($total_pemasukan) . " ,-"; ?></td>
+                    <td class="text-center text-bold text-danger"><?= "Rp. " . number_format($total_pengeluaran) . " ,-"; ?></td>
                     </tr>
                     <tr>
-                      <th colspan="4" class="text-right">SALDO</th>
-                      <td colspan="2" class="text-center text-bold text-white bg-primary"><?php echo "Rp. ".number_format($total_pemasukan - $total_pengeluaran)." ,-"; ?></td>
+                    <th colspan="4" class="text-right">SALDO</th>
+                    <td colspan="2" class="text-center text-bold text-white bg-primary"><?= "Rp. " . number_format($total_pemasukan - $total_pengeluaran) . " ,-"; ?></td>
                     </tr>
-                  </tbody>
+                </tbody>
                 </table>
+            </div>
 
-
-
-              </div>
-
-              <?php 
-            }else{
-              ?>
-
-              <div class="alert alert-info text-center">
+            <?php } else { ?>
+            <div class="alert alert-info text-center">
                 Silahkan Filter Laporan Terlebih Dulu.
-              </div>
+            </div>
+            <?php } ?>
 
-              <?php
-            }
-            ?>
-
-          </div>
         </div>
-      </section>
+        </div>
+    </section>
     </div>
-  </section>
-
+</section>
 </div>
+
 <?php include 'footer.php'; ?>

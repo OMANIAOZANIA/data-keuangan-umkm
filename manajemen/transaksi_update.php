@@ -1,50 +1,68 @@
 <?php 
-include '../koneksi.php';
-$id  = $_POST['id'];
-$tanggal  = $_POST['tanggal'];
-$jenis  = $_POST['jenis'];
-$kategori  = $_POST['kategori'];
-$nominal  = $_POST['nominal'];
-$keterangan  = $_POST['keterangan'];
-$bank  = $_POST['bank'];
+include '../config/db.php';
 
-$transaksi = mysqli_query($koneksi,"select * from transaksi where transaksi_id='$id'");
-$t = mysqli_fetch_assoc($transaksi);
+// validasi data POST
+$id         = intval($_POST['id']);
+$tanggal    = $_POST['tanggal'];
+$jenis      = $_POST['jenis'];
+$kategori   = intval($_POST['kategori']);
+$nominal    = floatval($_POST['nominal']);
+$keterangan = $_POST['keterangan'];
+$bank       = intval($_POST['bank']);
+
+// get data transaksi lama
+$stmt = $koneksi->prepare("SELECT * FROM transaksi WHERE transaksi_id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();	
+$t = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
 $bank_lama = $t['transaksi_bank'];
 
-$rekening = mysqli_query($koneksi,"select * from bank where bank_id='$bank_lama'");
-$r = mysqli_fetch_assoc($rekening);
+// get saldo bank lama
+$stmt = $koneksi->prepare("SELECT * FROM bank WHERE bank_id = ?");
+$stmt->bind_param("i", $bank_lama);
+$stmt->execute();
+$r = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 
-// Kembalikan nominal ke saldo bank lama
+// return saldo lama
+if ($t['transaksi_jenis'] == "Pemasukan") {
+    $kembalikan = $r['bank_saldo'] - $t['transaksi_nominal'];
+} else {
+    $kembalikan = $r['bank_saldo'] + $t['transaksi_nominal'];
+}
+$stmt = $koneksi->prepare("UPDATE bank SET bank_saldo = ? WHERE bank_id = ?");
+$stmt->bind_param("di", $kembalikan, $bank_lama);
+$stmt->execute();
+$stmt->close();
 
-if($t['transaksi_jenis'] == "Pemasukan"){
-	$kembalikan = $r['bank_saldo'] - $t['transaksi_nominal'];
-	mysqli_query($koneksi,"update bank set bank_saldo='$kembalikan' where bank_id='$bank_lama'");
+// get saldo bank baru
+$stmt = $koneksi->prepare("SELECT * FROM bank WHERE bank_id = ?");
+$stmt->bind_param("i", $bank);
+$stmt->execute();
+$rr = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 
-}else if($t['transaksi_jenis'] == "Pengeluaran"){
-	$kembalikan = $r['bank_saldo'] + $t['transaksi_nominal'];
-	mysqli_query($koneksi,"update bank set bank_saldo='$kembalikan' where bank_id='$bank_lama'");
-
+$saldo_sekarang = $rr['bank_saldo'];
+if ($jenis == "Pemasukan") {
+    $total = $saldo_sekarang + $nominal;
+} else {
+    $total = $saldo_sekarang - $nominal;
 }
 
+// update saldo bank
+$stmt = $koneksi->prepare("UPDATE bank SET bank_saldo = ? WHERE bank_id = ?");
+$stmt->bind_param("di", $total, $bank);
+$stmt->execute();
+$stmt->close();
 
-if($jenis == "Pemasukan"){
+// update transaksi
+$stmt = $koneksi->prepare("UPDATE transaksi SET transaksi_tanggal=?, transaksi_jenis=?, transaksi_kategori=?, transaksi_nominal=?, transaksi_keterangan=?, transaksi_bank=? WHERE transaksi_id=?");
+$stmt->bind_param("ssidsii", $tanggal, $jenis, $kategori, $nominal, $keterangan, $bank, $id);
+$stmt->execute();
+$stmt->close();
 
-	$rekening2 = mysqli_query($koneksi,"select * from bank where bank_id='$bank'");
-	$rr = mysqli_fetch_assoc($rekening2);
-	$saldo_sekarang = $rr['bank_saldo'];
-	$total = $saldo_sekarang+$nominal;
-	mysqli_query($koneksi,"update bank set bank_saldo='$total' where bank_id='$bank'");
-
-}elseif($jenis == "Pengeluaran"){
-
-	$rekening2 = mysqli_query($koneksi,"select * from bank where bank_id='$bank'");
-	$rr = mysqli_fetch_assoc($rekening2);
-	$saldo_sekarang = $rr['bank_saldo'];
-	$total = $saldo_sekarang-$nominal;
-	mysqli_query($koneksi,"update bank set bank_saldo='$total' where bank_id='$bank'");
-
-}	
-
-mysqli_query($koneksi, "update transaksi set transaksi_tanggal='$tanggal', transaksi_jenis='$jenis', transaksi_kategori='$kategori', transaksi_nominal='$nominal', transaksi_keterangan='$keterangan', transaksi_bank='$bank' where transaksi_id='$id'") or die(mysqli_error($koneksi));
-header("location:transaksi.php");
+header("Location: transaksi.php");
+exit();
+?>

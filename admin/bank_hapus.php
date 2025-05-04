@@ -1,8 +1,29 @@
 <?php 
-include '../koneksi.php';
-$id  = $_GET['id'];
+include '../config/db.php';
 
-mysqli_query($koneksi, "update transaksi set transaksi_bank='1' where transaksi_bank='$id'");
+$id = $_GET['id'];
+$bank_default = 1; // default bank
 
-mysqli_query($koneksi, "delete from bank where bank_id='$id'");
-header("location:bank.php");
+// update transaksi ke default bank
+$query_update = "UPDATE transaksi SET transaksi_bank = ? WHERE transaksi_bank = ?"; 
+$stmt_update = mysqli_prepare($koneksi, $query_update);
+
+if ($stmt_update) {
+    mysqli_stmt_bind_param($stmt_update, 'ii', $bank_default, $id);
+    mysqli_stmt_execute($stmt_update);
+    mysqli_stmt_close($stmt_update);
+}
+
+// delete
+$query_delete = "DELETE FROM bank WHERE bank_id = ?";
+$stmt_delete = mysqli_prepare($koneksi, $query_delete);
+
+if ($stmt_delete) {
+    mysqli_stmt_bind_param($stmt_delete, 'i', $id);
+    mysqli_stmt_execute($stmt_delete);
+    mysqli_stmt_close($stmt_delete);
+}
+
+header("Location: bank.php");
+exit();
+?>

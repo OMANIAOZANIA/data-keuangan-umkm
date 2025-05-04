@@ -1,8 +1,24 @@
 <?php 
-include '../koneksi.php';
-$id  = $_GET['id'];
+include '../config/db.php';
 
-mysqli_query($koneksi, "update transaksi set transaksi_kategori='1' where transaksi_kategori='$id'");
+$id = $_GET['id'] ?? '';
 
-mysqli_query($koneksi, "delete from kategori where kategori_id='$id'");
-header("location:kategori.php");
+if (!empty($id) && is_numeric($id)) {
+    // Update
+    if ($stmt1 = $koneksi->prepare("UPDATE transaksi SET transaksi_kategori = 1 WHERE transaksi_kategori = ?")) {
+        $stmt1->bind_param("i", $id);
+        $stmt1->execute();
+        $stmt1->close();
+    }
+
+    // Hapus kategori
+    if ($stmt2 = $koneksi->prepare("DELETE FROM kategori WHERE kategori_id = ?")) {
+        $stmt2->bind_param("i", $id);
+        $stmt2->execute();
+        $stmt2->close();
+    }
+}
+
+header("Location: kategori.php");
+exit;
+?>

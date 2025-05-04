@@ -1,7 +1,16 @@
 <?php 
-include '../koneksi.php';
-$id  = $_POST['id'];
-$kategori  = $_POST['kategori'];
+include '../config/db.php';
 
-mysqli_query($koneksi, "update kategori set kategori='$kategori' where kategori_id='$id'");
-header("location:kategori.php");
+$id = $_POST['id'] ?? '';
+$kategori = $_POST['kategori'] ?? '';
+
+// Update
+if ($stmt = $koneksi->prepare("UPDATE kategori SET kategori = ? WHERE kategori_id = ?")) {
+    $stmt->bind_param("si", $kategori, $id);
+    $stmt->execute();
+    $stmt->close();
+}
+
+header("Location: kategori.php");
+exit;
+?>

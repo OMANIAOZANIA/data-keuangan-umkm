@@ -1,6 +1,15 @@
 <?php 
-include '../koneksi.php';
-$kategori  = $_POST['kategori'];
+include '../config/db.php';
 
-mysqli_query($koneksi, "insert into kategori values (NULL,'$kategori')");
-header("location:kategori.php");
+$kategori = $_POST['kategori'] ?? '';
+
+// Insert
+if ($stmt = $koneksi->prepare("INSERT INTO kategori (kategori) VALUES (?)")) {
+    $stmt->bind_param("s", $kategori);  // 's' for string
+    $stmt->execute();
+    $stmt->close();
+}
+
+header("Location: kategori.php");
+exit;
+?>

@@ -2,197 +2,207 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Administrator - Sistem Informasi Keuangan</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Administrator - Sistem Informasi Keuangan</title>
 
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="stylesheet" href="../assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../assets/bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../assets/bower_components/Ionicons/css/ionicons.min.css">
-  <link rel="stylesheet" href="../assets/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE and Bower -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="../assets/dist/css/AdminLTE.min.css">
 
-  <link rel="stylesheet" href="../assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 
-  <link rel="stylesheet" href="../assets/dist/css/skins/_all-skins.min.css">
-  <link rel="stylesheet" href="../assets/bower_components/morris.js/morris.css">
-  <link rel="stylesheet" href="../assets/bower_components/jvectormap/jquery-jvectormap.css">
-  <link rel="stylesheet" href="../assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-  <link rel="stylesheet" href="../assets/bower_components/bootstrap-daterangepicker/daterangepicker.css">
-  <link rel="stylesheet" href="../assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="../assets/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../assets/bower_components/morris.js/morris.css">
+    <link rel="stylesheet" href="../assets/bower_components/jvectormap/jquery-jvectormap.css">
+    <link rel="stylesheet" href="../assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="../assets/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="../assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
-  <?php
-  include '../koneksi.php';
-  session_start();
-  if ($_SESSION['status'] != "administrator_logedin") {
-    header("location:../index.php?alert=belum_login");
-  }
-  ?>
+    <?php
+    include '../config/db.php';
 
+    session_start();
+    if ($_SESSION['status'] != "administrator_loggedin") {
+        header("location:../index.php?alert=belum_login");
+    }
+    ?>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
+    <style>
+        #table-datatable {
+            width: 100% !important;
+        }
 
-  <style>
-    #table-datatable {
-      width: 100% !important;
-    }
+        #table-datatable .sorting_disabled {
+            border: 1px solid #f4f4f4;
+        }
+    </style>
 
-    #table-datatable .sorting_disabled {
-      border: 1px solid #f4f4f4;
-    }
-  </style>
-  <div class="wrapper">
-
+    <div class="wrapper">
+    <!-- Header -->
     <header class="main-header">
-      <a href="index.php" class="logo">
+        <a href="index.php" class="logo">
         <span class="logo-mini"><b><i class="fa fa-money"></i></b> </span>
         <span class="logo-lg"><b>Keuangan UMKM</b></span>
-      </a>
-      <nav class="navbar navbar-static-top">
-        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-          <span class="sr-only">Toggle navigation</span>
         </a>
 
+        <nav class="navbar navbar-static-top">
+        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
         <div class="navbar-custom-menu">
-          <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav">
 
             <li class="dropdown user user-menu">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <?php
                 $id_user = $_SESSION['id'];
                 $profil = mysqli_query($koneksi, "select * from user where user_id='$id_user'");
                 $profil = mysqli_fetch_assoc($profil);
                 if ($profil['user_foto'] == "") {
                 ?>
-                  <img src="../gambar/sistem/user.png" class="user-image">
+                    <img src="../gambar/sistem/user.png" class="user-image">
                 <?php } else { ?>
-                  <img src="../gambar/user/<?php echo $profil['user_foto'] ?>" class="user-image">
+                    <img src="../gambar/user/<?php echo $profil['user_foto'] ?>" class="user-image">
                 <?php } ?>
                 <span class="hidden-xs"><?php echo $_SESSION['nama']; ?> - <?php echo $_SESSION['level']; ?></span>
-              </a>
+                </a>
             </li>
             <li>
-              <a href="logout.php" onclick="return confirm('Apakah Anda yakin untuk logout?')">
+                <a href="logout.php" onclick="return confirm('Apakah Anda yakin untuk logout?')">
                 <i class="fa fa-sign-out"></i> LOGOUT
-              </a>
+                </a>
             </li>
-          </ul>
+            </ul>
         </div>
-      </nav>
+        </nav>
     </header>
-
+    <!-- Sidebar -->
     <aside class="main-sidebar">
-      <section class="sidebar">
+        <section class="sidebar">
         <div class="user-panel">
-          <div class="pull-left image">
+            <div class="pull-left image">
             <?php
             $id_user = $_SESSION['id'];
             $profil = mysqli_query($koneksi, "select * from user where user_id='$id_user'");
             $profil = mysqli_fetch_assoc($profil);
             if ($profil['user_foto'] == "") {
             ?>
-              <img src="../gambar/sistem/user.png" class="img-circle">
+                <img src="../gambar/sistem/user.png" class="img-circle">
             <?php } else { ?>
-              <img src="../gambar/user/<?php echo $profil['user_foto'] ?>" class="img-circle" style="max-height:45px">
+                <img src="../gambar/user/<?php echo $profil['user_foto'] ?>" class="img-circle" style="max-height:45px">
             <?php } ?>
-          </div>
-          <div class="pull-left info">
+            </div>
+            <div class="pull-left info">
             <p><?php echo $_SESSION['nama']; ?></p>
             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-          </div>
+            </div>
         </div>
 
         <ul class="sidebar-menu" data-widget="tree">
-          <li class="header">MAIN NAVIGATION</li>
-
-          <li>
+            <li class="header">MAIN NAVIGATION</li>
+            
+            <!-- Dashboard -->
+            <li>
             <a href="index.php">
-              <i class="fa fa-dashboard"></i> <span>DASHBOARD</span>
+                <i class="fa fa-dashboard"></i> <span>DASHBOARD</span>
             </a>
-          </li>
-
-          <li>
+            </li>
+            
+            <!-- Kategori -->
+            <li>
             <a href="kategori.php">
-              <i class="fa fa-folder"></i> <span>DATA KATEGORI</span>
+                <i class="fa fa-folder"></i> <span>DATA KATEGORI</span>
             </a>
-          </li>
+            </li>
 
-          <li>
+            <!-- Transaksi -->
+            <li>
             <a href="transaksi.php">
-              <i class="fa fa-folder"></i> <span>DATA TRANSAKSI</span>
+                <i class="fa fa-folder"></i> <span>DATA TRANSAKSI</span>
             </a>
-          </li>
+            </li>
 
-          <li class="treeview">
+            <!-- Hutang Piutang -->
+            <li class="treeview">
             <a href="#">
-              <i class="fa fa-hand-paper-o"></i>
-              <span>HUTANG PIUTANG</span>
-              <span class="pull-right-container">
+                <i class="fa fa-hand-paper-o"></i>
+                <span>HUTANG PIUTANG</span>
+                <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
-              </span>
+                </span>
             </a>
             <ul class="treeview-menu" style="display: none;">
-              <li><a href="hutang.php"><i class="fa fa-circle-o"></i> Catatan Hutang</a></li>
-              <li><a href="piutang.php"><i class="fa fa-circle-o"></i> Catatan Piutang</a></li>
+                <li><a href="hutang.php"><i class="fa fa-circle-o"></i> Catatan Hutang</a></li>
+                <li><a href="piutang.php"><i class="fa fa-circle-o"></i> Catatan Piutang</a></li>
             </ul>
-          </li>
+            </li>
 
-          <li class="treeview">
+            <!-- Rincian Transaksi -->
+            <li class="treeview">
             <a href="#">
-              <i class="fa fa-dollar"></i>
-              <span>RINCIAN TRANSAKSI</span>
-              <span class="pull-right-container">
+                <i class="fa fa-dollar"></i>
+                <span>RINCIAN TRANSAKSI</span>
+                <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
-              </span>
+                </span>
             </a>
             <ul class="treeview-menu" style="display: none;">
-              <li><a href="transaksi_bsi.php"><i class="fa fa-circle-o"></i> BANK BSI</a></li>
-              <li><a href="transaksi_bca.php"><i class="fa fa-circle-o"></i> BANK BCA</a></li>
-              <li><a href="transaksi_cash.php"><i class="fa fa-circle-o"></i> CASH</a></li>
+                <li><a href="transaksi_bri.php"><i class="fa fa-circle-o"></i> BANK BRI</a></li>
+                <li><a href="transaksi_bca.php"><i class="fa fa-circle-o"></i> BANK BCA</a></li>
+                <li><a href="transaksi_cash.php"><i class="fa fa-circle-o"></i> CASH</a></li>
             </ul>
-          </li>
+            </li>
 
-          <li>
+            <!-- Bank -->
+            <li>
             <a href="bank.php">
-              <i class="fa fa-building"></i> <span>REKENING BANK</span>
+                <i class="fa fa-building"></i> <span>REKENING BANK</span>
             </a>
-          </li>
+            </li>
 
-          <li class="treeview">
+            <!-- Data Pengguna -->
+            <li class="treeview">
             <a href="#">
-              <i class="fa fa-users"></i>
-              <span>DATA PENGGUNA</span>
-              <span class="pull-right-container">
+                <i class="fa fa-users"></i>
+                <span>DATA PENGGUNA</span>
+                <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
-              </span>
+                </span>
             </a>
             <ul class="treeview-menu" style="display: none;">
-              <li><a href="user.php"><i class="fa fa-circle-o"></i> Data Pengguna</a></li>
-              <li><a href="user_tambah.php"><i class="fa fa-circle-o"></i> Tambah Pengguna</a></li>
+                <li><a href="user.php"><i class="fa fa-circle-o"></i> Data Pengguna</a></li>
+                <li><a href="user_tambah.php"><i class="fa fa-circle-o"></i> Tambah Pengguna</a></li>
             </ul>
-          </li>
+            </li>
 
-          <li>
+            <!-- Laporan -->
+            <li>
             <a href="laporan.php">
-              <i class="fa fa-file"></i> <span>LAPORAN</span>
+                <i class="fa fa-file"></i> <span>LAPORAN</span>
             </a>
-          </li>
+            </li>
 
-          <li>
+            <!-- Ganti Password -->
+            <li>
             <a href="gantipassword.php">
-              <i class="fa fa-lock"></i> <span>GANTI PASSWORD</span>
+                <i class="fa fa-lock"></i> <span>GANTI PASSWORD</span>
             </a>
-          </li>
+            </li>
 
-          <li>
+            <!-- Logout -->
+            <li>
             <a href="logout.php" onclick="return confirm('Apakah Anda yakin untuk logout?')">
-              <i class="fa fa-sign-out"></i> <span>LOGOUT</span>
+                <i class="fa fa-sign-out"></i> <span>LOGOUT</span>
             </a>
-          </li>
+            </li>
 
         </ul>
-      </section>
-      <!-- /.sidebar -->
+        </section>
     </aside>

@@ -16,13 +16,13 @@
         <div class="box box-info">
             
         <div class="box-header">
-            <h3 class="box-title">Transaksi Cash</h3>
+            <h3 class="box-title">Transaksi Bank BRI</h3>
             <div class="btn-group pull-right">
             <p><b>Total Saldo:</b>
                 <?php
                 $stmt = $koneksi->prepare("SELECT bank_saldo FROM bank WHERE bank_id = ?");
                 $stmt->bind_param("i", $bank_id);
-                $bank_id = 3;
+                $bank_id = 1;
                 $stmt->execute();
                 $stmt->bind_result($saldo);
                 while ($stmt->fetch()) {
@@ -126,7 +126,7 @@
                         t.transaksi_nominal, k.kategori 
                     FROM transaksi t 
                     JOIN kategori k ON k.kategori_id = t.transaksi_kategori 
-                    WHERE t.transaksi_bank = 3 
+                    WHERE t.transaksi_bank = 1 
                     ORDER BY t.transaksi_id DESC
                 ";
                 $result = $koneksi->query($query);

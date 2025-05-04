@@ -34,10 +34,10 @@
       </center>
       <div class="login-box-body">
         <center>
-          <img src="gambar/sistem/logo.png" style="width: 150px;height: auto">
+          <img src="gambar/sistem/logo.png" style="width: 150px; height: auto">
         </center>
         <p class="login-box-msg text-bold"></p>
-        <form action="periksa_login.php" method="POST">
+        <form action="login.php" method="POST">
           <div class="form-group has-feedback">
             <input type="text" class="form-control" placeholder="Username" name="username" required="required" autocomplete="off">
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
