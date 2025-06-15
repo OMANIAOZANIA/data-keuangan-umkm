@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2025 at 06:21 PM
+-- Generation Time: Jun 15, 2025 at 03:39 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -111,8 +111,7 @@ CREATE TABLE `piutang` (
 --
 
 INSERT INTO `piutang` (`piutang_id`, `piutang_tanggal`, `piutang_nominal`, `piutang_keterangan`) VALUES
-(1, '2025-04-22', 1000000, 'Hutang oleh rahmat'),
-(3, '2025-04-30', 70000, 'Hutang oleh Irfan untuk beli pulsa');
+(1, '2025-04-22', 1000000, 'Hutang oleh Kiara');
 
 -- --------------------------------------------------------
 
