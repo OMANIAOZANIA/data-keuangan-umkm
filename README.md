@@ -45,7 +45,7 @@ Sebelum menjalankan aplikasi **UangKM**, pastikan sistem kamu memiliki:
 1. **Clone repositori:**
 
    ```bash
-   git clone https://github.com/namauser/uangkm.git
+   git clone https://github.com/OMANIAOZANIA/uangkm.git
    ```
    
 3. **Pindahkan ke direktori XAMPP:**
@@ -63,7 +63,7 @@ Sebelum menjalankan aplikasi **UangKM**, pastikan sistem kamu memiliki:
 
 5. **Konfigurasi database:**
 
-   Buka file `koneksi.php` (terletak di folder `config`, sesuaikan jika perlu:
+   Buka file `koneksi.php` (terletak di folder `config`), sesuaikan jika perlu:
    ```php
    $host = "localhost";
    $user = "root";
@@ -108,7 +108,7 @@ Pastikan:
 - Perubahan tidak merusak fitur utama
 - Sertakan penjelasan yang jelas di PR
 
-Jika menemukan bug, silakan buat [issue](https://github.com/OMANIAOZANIA/data-keuangan-umkm/issues).
+Jika menemukan bug, silakan buat [issue](https://github.com/OMANIAOZANIA/uangkm/issues).
 
 ---
 
