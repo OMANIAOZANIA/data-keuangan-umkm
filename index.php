@@ -14,11 +14,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
-<body class=" bg-primary">
+<body class="bg-primary">
 <div class="container">
     <div class="login-box">
     <center>
-        <h2>SISTEM INFORMASI KEUANGAN</h2>
         <br />
         <?php
         if (isset($_GET['alert'])) {
@@ -34,7 +33,7 @@
     </center>
     <div class="login-box-body">
         <center>
-        <img src="gambar/sistem/logo.png" style="width: 150px; height: auto">
+        <img src="gambar/sistem/logo.png" style="width: 300px; height: auto">
         </center>
         <p class="login-box-msg text-bold"></p>
         <form action="login.php" method="POST">

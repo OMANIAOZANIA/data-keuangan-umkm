@@ -47,9 +47,9 @@
     <div class="wrapper">
     <!-- Header -->
     <header class="main-header">
-        <a href="index.php" class="logo">
+        <a href="index.php" class="logo" style="background-color: #222d32">
         <span class="logo-mini"><b><i class="fa fa-money"></i></b> </span>
-        <span class="logo-lg"><b>Keuangan UMKM</b></span>
+        <span class="logo-lg"><img src="../gambar/sistem/logo.png" style="width: 150px; height: auto"></span>
         </a>
 
         <nav class="navbar navbar-static-top">
