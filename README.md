@@ -44,9 +44,11 @@ Sebelum menjalankan aplikasi **UangKM**, pastikan sistem kamu memiliki:
 
 1. **Clone repositori:**
 
+   Kamu bisa clone lewat `command line` dengan:
    ```bash
    git clone https://github.com/OMANIAOZANIA/uangkm.git
    ```
+   Atau kamu bisa download `.zip` melalui: [`uangkm-main.zip`](https://github.com/OMANIAOZANIA/uangkm/archive/refs/heads/main.zip)
    
 3. **Pindahkan ke direktori XAMPP:**
 
