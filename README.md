@@ -1,3 +1,5 @@
+![UangKM Logo](gambar/sistem/logo.png)
+
 # 💰 UangKM - Aplikasi Manajemen Keuangan UMKM
 
 **UangKM** adalah aplikasi web berbasis PHP + MySQL yang dirancang untuk membantu UMKM (Usaha Mikro Kecil Menengah) dalam mengelola keuangan secara sederhana namun efisien. Aplikasi ini mendukung pencatatan pemasukan, pengeluaran, utang-piutang, serta menyediakan laporan yang bisa diekspor ke PDF/Excel.
@@ -50,30 +52,30 @@ Sebelum menjalankan aplikasi **UangKM**, pastikan sistem kamu memiliki:
    ```
    Atau kamu bisa download `.zip` melalui: [`uangkm-main.zip`](https://github.com/OMANIAOZANIA/uangkm/archive/refs/heads/main.zip)
    
-3. **Pindahkan ke direktori XAMPP:**
+2. **Pindahkan ke direktori XAMPP:**
 
    Contoh:
    ```bash
    C:\xampp\htdocs\uangkm
    ```
    
-4. **Import database:**
+3. **Import database:**
 
    - Buka `phpMyAdmin`
-   - Buat database baru dengan nama `uangkm`
+   - Buat database baru dengan nama `data_keuangan` (atau bebas, sesuaikan dengan `koneksi.php`)
    - Import file `data_keuangan.sql` dari folder `database`
 
-5. **Konfigurasi database:**
+4. **Konfigurasi database:**
 
    Buka file `koneksi.php` (terletak di folder `config`), sesuaikan jika perlu:
    ```php
    $host = "localhost";
    $user = "root";
    $password = "";
-   $database = "data_keuangan"; // Ubah dengan nama database kamu di phpMyAdmin
+   $database = "data_keuangan"; // Ubah dengan nama database yang kamu buat di phpMyAdmin
    ```
    
-6. **Jalankan aplikasi di browser:**
+5. **Jalankan aplikasi di browser:**
 
    ```
    http://localhost/uangkm
